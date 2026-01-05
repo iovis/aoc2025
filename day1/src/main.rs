@@ -1,4 +1,5 @@
 use day1::Dial;
+use day1::Rotate;
 use day1::parser::parse;
 
 fn main() {
@@ -24,7 +25,37 @@ fn p1(input: &str) -> usize {
 }
 
 fn p2(input: &str) -> usize {
-    123
+    let mut dial = Dial::new(50);
+    let mut zeroes = 0;
+
+    input.lines().map(parse).for_each(|rotation| {
+        let mut carry: i64 = 0;
+
+        if let Rotate::Left(_) = rotation
+            && dial.is_zero()
+        {
+            carry = -1;
+        }
+
+        match rotation {
+            Rotate::Left(number) => carry += (dial.number - number).div_euclid(100).abs(),
+            Rotate::Right(number) => carry += (dial.number + number).div_euclid(100),
+        };
+
+        dial.rotate(rotation);
+
+        if let Rotate::Left(_) = rotation
+            && dial.is_zero()
+        {
+            carry += 1;
+        }
+
+        if carry > 0 {
+            zeroes += carry as usize;
+        }
+    });
+
+    zeroes
 }
 
 #[cfg(test)]
@@ -52,9 +83,18 @@ mod tests {
     #[test]
     fn p2_test() {
         let input = indoc::indoc! {"
-            something
+            L68
+            L30
+            R48
+            L5
+            R60
+            L55
+            L1
+            L99
+            R14
+            L82
         "};
 
-        // assert_eq!(p2(input), 23);
+        assert_eq!(p2(input), 6);
     }
 }
