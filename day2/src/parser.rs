@@ -1,6 +1,5 @@
 use std::ops::RangeInclusive;
 
-use nom::combinator::all_consuming;
 use nom::multi::separated_list1;
 use nom::{
     IResult, Parser, bytes::complete::tag, character::complete::u64, combinator::map,
