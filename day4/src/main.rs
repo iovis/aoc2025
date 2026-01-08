@@ -8,7 +8,7 @@ fn main() {
 }
 
 fn p1(input: &str) -> usize {
-    let grid: Vec<&[u8]> = input.lines().map(|line| line.as_bytes()).collect();
+    let grid: Vec<Vec<u8>> = input.lines().map(|line| line.as_bytes().to_vec()).collect();
     let rows = grid.len();
     let cols = grid[0].len();
     let mut count = 0;
@@ -26,7 +26,7 @@ fn p1(input: &str) -> usize {
     count
 }
 
-fn can_be_accessed(grid: &[&[u8]], (i, j): (usize, usize)) -> bool {
+fn can_be_accessed(grid: &Vec<Vec<u8>>, (i, j): (usize, usize)) -> bool {
     let rows = grid.len() as i32;
     let cols = grid[0].len() as i32;
     let mut count = 0;
@@ -59,7 +59,30 @@ fn can_be_accessed(grid: &[&[u8]], (i, j): (usize, usize)) -> bool {
 }
 
 fn p2(input: &str) -> usize {
-    todo!()
+    let mut grid: Vec<Vec<u8>> = input.lines().map(|line| line.as_bytes().to_vec()).collect();
+    let rows = grid.len();
+    let cols = grid[0].len();
+
+    loop {
+        let mut count = 0;
+
+        for i in 0..rows {
+            for j in 0..cols {
+                if grid[i][j] == b'@' {
+                    if can_be_accessed(&grid, (i, j)) {
+                        grid[i][j] = b'x';
+                        count += 1;
+                    }
+                }
+            }
+        }
+
+        if count == 0 {
+            break;
+        }
+    }
+
+    grid.iter().flatten().filter(|&&char| char == b'x').count()
 }
 
 #[cfg(test)]
@@ -100,7 +123,6 @@ mod tests {
             @.@.@@@.@.
         "};
 
-        // assert_eq!(p2(input), 13);
+        assert_eq!(p2(input), 43);
     }
 }
-
