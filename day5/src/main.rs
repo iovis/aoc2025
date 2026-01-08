@@ -1,5 +1,6 @@
+use std::ops::RangeInclusive;
 mod parser;
-use parser::*;
+use parser::parse;
 
 fn main() {
     tracing_subscriber::fmt::init();
@@ -20,7 +21,32 @@ fn p1(input: &str) -> usize {
 }
 
 fn p2(input: &str) -> u64 {
-    todo!()
+    let (mut ranges, _) = parse(input);
+    ranges.sort_unstable_by_key(|range| *range.start());
+
+    merge_sorted_ranges(&ranges)
+        .iter()
+        .map(|range| range.end() - range.start() + 1)
+        .sum()
+}
+
+fn merge_sorted_ranges(ranges: &[RangeInclusive<u64>]) -> Vec<RangeInclusive<u64>> {
+    let mut merged: Vec<RangeInclusive<u64>> = Vec::with_capacity(ranges.len());
+
+    for range in ranges {
+        if let Some(last) = merged.last_mut()
+            && range.start() <= last.end()
+        {
+            let new_start = *last.start();
+            let new_end = *last.end().max(range.end());
+
+            *last = new_start..=new_end;
+        } else {
+            merged.push(range.clone());
+        }
+    }
+
+    merged
 }
 
 #[cfg(test)]
@@ -63,7 +89,6 @@ mod tests {
             32
         "};
 
-        // assert_eq!(p2(input), 3);
+        assert_eq!(p2(input), 14);
     }
 }
-
