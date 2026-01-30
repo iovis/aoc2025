@@ -40,7 +40,7 @@ fn p2(input: &str) -> usize {
         match rotation {
             Rotate::Left(number) => carry += (dial.number - number).div_euclid(100).abs(),
             Rotate::Right(number) => carry += (dial.number + number).div_euclid(100),
-        };
+        }
 
         dial.rotate(rotation);
 
@@ -51,7 +51,7 @@ fn p2(input: &str) -> usize {
         }
 
         if carry > 0 {
-            zeroes += carry as usize;
+            zeroes += usize::try_from(carry).unwrap();
         }
     });
 

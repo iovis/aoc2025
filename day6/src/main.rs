@@ -49,7 +49,7 @@ fn p2(input: &str) -> u64 {
     for line in input.lines() {
         let line = line.as_bytes();
         match line[0] {
-            b'*' | b'+' => operators = line.to_owned(),
+            b'*' | b'+' => line.clone_into(&mut operators),
             _ => problems.push(line.to_owned()),
         }
     }
@@ -85,6 +85,7 @@ fn p2(input: &str) -> u64 {
         for j in start..end {
             let mut number: Vec<u8> = vec![];
 
+            #[allow(clippy::needless_range_loop)]
             for i in 0..problems.len() {
                 if problems[i][j] != b' ' {
                     number.push(problems[i][j]);
@@ -125,13 +126,13 @@ mod tests {
     fn p1_test() {
         tracing_subscriber::fmt::init();
 
-        assert_eq!(p1(INPUT), 4277556);
+        assert_eq!(p1(INPUT), 4_277_556);
     }
 
     #[test]
     fn p2_test() {
         tracing_subscriber::fmt::init();
 
-        assert_eq!(p2(INPUT), 3263827);
+        assert_eq!(p2(INPUT), 3_263_827);
     }
 }

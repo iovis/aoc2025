@@ -83,6 +83,7 @@ fn max_recursive(array: &[u8], start: usize, chars_left: usize, indices: &mut Ve
     let mut max_idx = 0;
     let mut max_val = 0u8;
 
+    #[allow(clippy::needless_range_loop)]
     for i in start..=end {
         if array[i] > max_val {
             max_val = array[i];
@@ -131,7 +132,7 @@ mod tests {
             818181911112111
         "};
 
-        assert_eq!(p2(input), 3121910778619);
+        assert_eq!(p2(input), 3_121_910_778_619);
     }
 
     #[test]

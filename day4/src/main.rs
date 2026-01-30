@@ -15,10 +15,8 @@ fn p1(input: &str) -> usize {
 
     for i in 0..rows {
         for j in 0..cols {
-            if grid[i][j] == b'@' {
-                if can_be_accessed(&grid, (i, j)) {
-                    count += 1;
-                }
+            if grid[i][j] == b'@' && can_be_accessed(&grid, (i, j)) {
+                count += 1;
             }
         }
     }
@@ -26,7 +24,10 @@ fn p1(input: &str) -> usize {
     count
 }
 
-fn can_be_accessed(grid: &Vec<Vec<u8>>, (i, j): (usize, usize)) -> bool {
+#[allow(clippy::cast_possible_truncation)]
+#[allow(clippy::cast_sign_loss)]
+#[allow(clippy::cast_possible_wrap)]
+fn can_be_accessed(grid: &[Vec<u8>], (i, j): (usize, usize)) -> bool {
     let rows = grid.len() as i32;
     let cols = grid[0].len() as i32;
     let mut count = 0;
@@ -68,11 +69,9 @@ fn p2(input: &str) -> usize {
 
         for i in 0..rows {
             for j in 0..cols {
-                if grid[i][j] == b'@' {
-                    if can_be_accessed(&grid, (i, j)) {
-                        grid[i][j] = b'x';
-                        count += 1;
-                    }
+                if grid[i][j] == b'@' && can_be_accessed(&grid, (i, j)) {
+                    grid[i][j] = b'x';
+                    count += 1;
                 }
             }
         }
