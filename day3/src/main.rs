@@ -103,7 +103,7 @@ mod tests {
 
     #[test]
     fn p1_test() {
-        tracing_subscriber::fmt::init();
+        let _ = tracing_subscriber::fmt::try_init();
         let input = indoc::indoc! {"
             987654321111111
             811111111111119
@@ -116,7 +116,7 @@ mod tests {
 
     #[test]
     fn p1_edge_cases_test() {
-        tracing_subscriber::fmt::init();
+        let _ = tracing_subscriber::fmt::try_init();
         let input = "5966546654588755548354591946657465889859765969657756889447669666979883895847755487857956955568577855";
 
         assert_eq!(p1(input), 99);
@@ -124,7 +124,7 @@ mod tests {
 
     #[test]
     fn p2_test() {
-        tracing_subscriber::fmt::init();
+        let _ = tracing_subscriber::fmt::try_init();
         let input = indoc::indoc! {"
             987654321111111
             811111111111119

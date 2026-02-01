@@ -124,14 +124,14 @@ mod tests {
 
     #[test]
     fn p1_test() {
-        tracing_subscriber::fmt::init();
+        let _ = tracing_subscriber::fmt::try_init();
 
         assert_eq!(p1(INPUT), 4_277_556);
     }
 
     #[test]
     fn p2_test() {
-        tracing_subscriber::fmt::init();
+        let _ = tracing_subscriber::fmt::try_init();
 
         assert_eq!(p2(INPUT), 3_263_827);
     }
