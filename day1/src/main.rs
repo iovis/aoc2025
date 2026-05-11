@@ -3,7 +3,7 @@ use day1::Rotate;
 use day1::parser::parse;
 
 fn main() {
-    let input = include_str!("input.txt");
+    let input = include_str!("../input.txt");
 
     println!("p1 = {:?}", p1(input));
     println!("p2 = {:?}", p2(input));
