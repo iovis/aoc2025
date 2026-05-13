@@ -14,8 +14,6 @@ BIN := $(DEBUG_DIR)/$(TARGET)
 RELEASE_BIN := $(RELEASE_DIR)/$(TARGET)
 TEST_BIN := $(DEBUG_DIR)/$(TARGET)_test
 
-.DEFAULT_GOAL := run
-
 .PHONY: all run release run_release test compiledb clean
 
 all: $(BIN)
