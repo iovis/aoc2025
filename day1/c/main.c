@@ -1,5 +1,6 @@
 #include "p1.h"
 
+#include <stddefer.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -22,22 +23,22 @@ static char *read_file(const char *restrict filename) {
   FILE *file = fopen(filename, "rb");
   if (!file) {
     perror("failed to read file");
-    exit(EXIT_FAILURE);
+    return nullptr;
   }
+
+  defer fclose(file);
 
   long file_size = get_file_size(file);
   if (file_size == -1) {
     perror("failed to read file size");
-    fclose(file);
-    exit(EXIT_FAILURE);
+    return nullptr;
   }
 
   size_t buffer_size = file_size + 1;
   char *buffer = malloc(buffer_size * sizeof(char));
   if (!buffer) {
     perror("failed to allocate memory");
-    fclose(file);
-    exit(EXIT_FAILURE);
+    return nullptr;
   }
 
   size_t bytes_read = fread(buffer, sizeof(*buffer), buffer_size - 1, file);
@@ -45,22 +46,24 @@ static char *read_file(const char *restrict filename) {
 
   if (bytes_read != buffer_size - 1) {
     fprintf(stderr, "fread() failed: %zu (bytes read) != %zu (buffer size)\n", bytes_read, buffer_size);
-    fclose(file);
-    exit(EXIT_FAILURE);
+    free(buffer);
+    return nullptr;
   }
 
-  fclose(file);
   return buffer;
 }
 
 int main(int argc, char *argv[]) {
-  if (argc == 2) {
-    char *input = read_file(argv[1]);
+  if (argc != 2) {
     printf("p1 = %lu\n", p1(input));
-    free(input);
-  } else {
-    printf("p1 = %lu\n", p1(input));
+    return EXIT_SUCCESS;
   }
 
-  return 0;
+  char *input = read_file(argv[1]);
+  if (!input) return EXIT_FAILURE;
+  defer free(input);
+
+  printf("p1 = %lu\n", p1(input));
+
+  return EXIT_SUCCESS;
 }
