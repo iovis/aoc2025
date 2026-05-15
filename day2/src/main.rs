@@ -1,7 +1,7 @@
 use day2::parse;
 
 fn main() {
-    let input = include_str!("input.txt");
+    let input = include_str!("../input.txt");
 
     println!("p1 = {:?}", p1(input));
     println!("p2 = {:?}", p2(input));
@@ -58,6 +58,7 @@ fn is_valid_id_slow(id: u64) -> bool {
     true
 }
 
+#[allow(clippy::unreadable_literal)]
 #[cfg(test)]
 mod tests {
     use super::*;

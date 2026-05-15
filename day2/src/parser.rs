@@ -16,6 +16,7 @@ fn parse_range(input: &str) -> IResult<&str, RangeInclusive<u64>> {
     map(separated_pair(u64, tag("-"), u64), |(a, b)| a..=b).parse(input)
 }
 
+#[allow(clippy::unreadable_literal)]
 #[cfg(test)]
 mod tests {
     use super::*;
