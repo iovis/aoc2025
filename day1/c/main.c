@@ -1,4 +1,5 @@
 #include "p1.h"
+#include "p2.h"
 
 #include <stddefer.h>
 #include <stdio.h>
@@ -56,6 +57,7 @@ static char *read_file(const char *restrict filename) {
 int main(int argc, char *argv[]) {
   if (argc != 2) {
     printf("p1 = %lu\n", p1(input));
+    printf("p2 = %lu\n", p2(input));
     return EXIT_SUCCESS;
   }
 
@@ -64,6 +66,7 @@ int main(int argc, char *argv[]) {
   defer free(input);
 
   printf("p1 = %lu\n", p1(input));
+  printf("p2 = %lu\n", p2(input));
 
   return EXIT_SUCCESS;
 }

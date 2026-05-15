@@ -2,8 +2,8 @@
 
 #include <stdint.h>
 
-uint64_t p1(const char *input);
+uint64_t p2(const char *input);
 
 #ifdef TEST
-void p1_tests(void);
+void p2_tests(void);
 #endif

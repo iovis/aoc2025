@@ -1,10 +1,10 @@
-#include "p1.h"
+#include "p2.h"
 #include "dial.h"
 #include "parser.h"
 
 #include <stdint.h>
 
-uint64_t p1(const char *input) {
+uint64_t p2(const char *input) {
   Dial dial = dial_new(50);
   ParseResult result;
   uint64_t total = 0;
@@ -13,9 +13,7 @@ uint64_t p1(const char *input) {
     result = parse(input);
     if (result.error) break;
 
-    if (dial_rotate(&dial, result.number) == 0) {
-      total++;
-    }
+    total += dial_rotate_with_count(&dial, result.number);
 
     input = result.rest;
   }
@@ -26,7 +24,7 @@ uint64_t p1(const char *input) {
 #ifdef TEST
 #include <assert.h>
 
-void p1_tests(void) {
+void p2_tests(void) {
   const char *input = "L68\n"
                       "L30\n"
                       "R48\n"
@@ -38,6 +36,6 @@ void p1_tests(void) {
                       "R14\n"
                       "L82\n";
 
-  assert(p1(input) == 3);
+  assert(p2(input) == 6);
 }
 #endif

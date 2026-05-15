@@ -1,2 +1,4 @@
 target/
+callgrind.out
 compile_commands.json
+profile.json.gz

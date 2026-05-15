@@ -1,13 +1,15 @@
-#include <stdio.h>
-
 #include "dial.h"
 #include "p1.h"
+#include "p2.h"
 #include "parser.h"
+
+#include <stdio.h>
 
 int main(void) {
   dial_tests();
   parse_tests();
-  p1_test();
+  p1_tests();
+  p2_tests();
   puts("ok");
   return 0;
 }
