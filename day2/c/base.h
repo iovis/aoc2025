@@ -1,7 +1,10 @@
 #pragma once
 
 #include <stddef.h>
+#include <stddefer.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 typedef int8_t i8;
 typedef int16_t i16;
@@ -24,7 +27,6 @@ typedef double f64;
 #endif
 
 #ifndef NDEBUG
-#include <stdio.h>
 #define dbg(fmt, ...)                                                                                                  \
   do {                                                                                                                 \
     fprintf(stderr, "[%s:%d:%s] " fmt "\n", __FILE__, __LINE__, __func__ __VA_OPT__(, ) __VA_ARGS__);                  \
