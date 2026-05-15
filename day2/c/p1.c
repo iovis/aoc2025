@@ -3,11 +3,14 @@
 #include "range.h"
 #include <string.h>
 
+// UINT64_MAX = 18446744073709551615 => 20 digits + '\0'
+#define U64_STRING_SIZE 21
+
 static bool is_valid_id(u64 value) {
-  char *id = nullptr;
-  int id_len = asprintf(&id, "%lu", value);
+  char id[U64_STRING_SIZE] = {0};
+  int id_len = snprintf(id, U64_STRING_SIZE, "%lu", value);
   assert(id_len != -1);
-  defer free(id);
+  assert((usize)id_len < U64_STRING_SIZE);
 
   if (id_len % 2 != 0) return true;
 
