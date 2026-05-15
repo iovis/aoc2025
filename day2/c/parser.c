@@ -24,7 +24,7 @@ ParseResult parse(const char *input) {
 void parse_print(const ParseResult *self) {
   fprintf(
       stderr,
-      "ParseResult { range = { start = %ld, end = %ld }, error = %s, rest = \"%s\" }\n",
+      "ParseResult { range = { start = %lu, end = %lu }, error = %s, rest = \"%s\" }\n",
       self->range.start,
       self->range.end,
       self->error ? "true" : "false",
@@ -39,7 +39,7 @@ static void parse_test(void) {
   const char *line = "11-22,95-115,998-1012";
 
   ParseResult result = parse(line);
-  parse_print(&result);
+  // parse_print(&result);
 
   assert(result.error == false);
   assert(result.range.start == 11);
@@ -47,7 +47,7 @@ static void parse_test(void) {
   assert(strcmp(result.rest, "95-115,998-1012") == 0);
 
   result = parse(result.rest);
-  parse_print(&result);
+  // parse_print(&result);
 
   assert(result.error == false);
   assert(result.range.start == 95);
@@ -55,7 +55,7 @@ static void parse_test(void) {
   assert(strcmp(result.rest, "998-1012") == 0);
 
   result = parse(result.rest);
-  parse_print(&result);
+  // parse_print(&result);
 
   assert(result.error == false);
   assert(result.range.start == 998);

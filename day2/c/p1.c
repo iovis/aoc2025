@@ -6,6 +6,7 @@
 static bool is_valid_id(u64 value) {
   char *id = nullptr;
   int id_len = asprintf(&id, "%lu", value);
+  assert(id_len != -1);
   defer free(id);
 
   if (id_len % 2 != 0) return true;

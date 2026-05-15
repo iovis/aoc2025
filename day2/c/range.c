@@ -5,7 +5,9 @@ RangeInclusive range_from(const char *str) {
   u64 start = 0;
   u64 end = 0;
 
-  sscanf(str, "%lu-%lu", &start, &end);
+  int parsed = sscanf(str, "%lu-%lu", &start, &end);
+  assert(parsed == 2);
+  (void)parsed;
 
   return (RangeInclusive){
       .start = start,
@@ -14,7 +16,8 @@ RangeInclusive range_from(const char *str) {
 }
 
 void range_each(const RangeInclusive *self, void (*each_fn)(void *ctx, u64 value), void *ctx) {
-  for (usize i = self->start; i <= self->end; i++) {
+  assert(self->end != UINT64_MAX); // in case `i` wraps
+  for (u64 i = self->start; i <= self->end; i++) {
     each_fn(ctx, i);
   }
 }
