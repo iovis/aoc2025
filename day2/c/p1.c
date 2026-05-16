@@ -27,11 +27,6 @@ static void is_valid_id_string_test(void) {
 }
 #endif
 
-static void invalid_ids(void *ctx, u64 value) {
-  u64 *total = ctx;
-  if (!is_valid_id_string(value)) *total += value;
-}
-
 u64 p1(const char *input) {
   const char *line = input;
   ParseResult result;
@@ -43,7 +38,9 @@ u64 p1(const char *input) {
     line = result.rest;
 
     RangeInclusive range = result.range;
-    range_each(&range, invalid_ids, &total);
+    for (u64 id = range.start; id <= range.end; id++) {
+      if (!is_valid_id_string(id)) total += id;
+    }
   }
 
   return total;

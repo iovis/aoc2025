@@ -8,7 +8,6 @@ typedef struct {
 } RangeInclusive;
 
 RangeInclusive range_from(const char *str);
-void range_each(const RangeInclusive *self, void (*each_fn)(void *ctx, u64 value), void *ctx);
 void range_print(const RangeInclusive *self);
 
 #ifdef TEST

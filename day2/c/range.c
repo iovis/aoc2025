@@ -15,13 +15,6 @@ RangeInclusive range_from(const char *str) {
   };
 }
 
-void range_each(const RangeInclusive *self, void (*each_fn)(void *ctx, u64 value), void *ctx) {
-  assert(self->end != UINT64_MAX); // in case `i` wraps
-  for (u64 i = self->start; i <= self->end; i++) {
-    each_fn(ctx, i);
-  }
-}
-
 void range_print(const RangeInclusive *self) {
   printf("RangeInclusive { start = %lu, end = %lu }\n", self->start, self->end);
 }
