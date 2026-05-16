@@ -3,6 +3,9 @@
 #include "parser.h"
 #include "range.h"
 
+#if 0
+// Kept for comparison of string vs math approach
+
 #include <string.h>
 
 // UINT64_MAX = 18446744073709551615 => 20 digits + '\0'
@@ -80,6 +83,7 @@ static void is_valid_id_test(void) {
   assert(is_valid_id(1188511880) == true);
 }
 #endif
+#endif
 
 // faster than `is_valid_id` because it solves it
 // by calculating the number of digits
@@ -144,8 +148,8 @@ static void p1_test(void) {
 }
 
 void p1_tests(void) {
-  u64_to_str_test();
-  is_valid_id_test();
+  // u64_to_str_test();
+  // is_valid_id_test();
   is_valid_id_fast_test();
   p1_test();
 }
