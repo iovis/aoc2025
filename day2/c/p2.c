@@ -3,7 +3,14 @@
 #include "parser.h"
 #include "range.h"
 #include "u64str.h"
-#include <string.h>
+
+static bool bytes_equal(const char *a, const char *b, usize len) {
+  for (usize i = 0; i < len; i++) {
+    if (a[i] != b[i]) return false;
+  }
+
+  return true;
+}
 
 static bool p2_is_valid_id_string(u64 value) {
   U64Str id = u64str_from(value);
@@ -16,7 +23,7 @@ static bool p2_is_valid_id_string(u64 value) {
     usize windows = id.len / window_size;
     bool invalid = true;
     for (usize i = 1; i < windows; i++) {
-      if (strncmp(&text[0], &text[i * window_size], window_size) != 0) {
+      if (!bytes_equal(&text[0], &text[i * window_size], window_size)) {
         // if a window is not equal to the previous ones, it's not invalid
         invalid = false;
         break;
