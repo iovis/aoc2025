@@ -1,11 +1,11 @@
 #pragma once
 
-#include "base.h"
+#include "base.h" // IWYU pragma: keep
 
-#include "p1.h"
-#include "parser.h"
-#include "range.h"
-#include "u64str.h"
+#include "p1.h"     // IWYU pragma: keep
+#include "parser.h" // IWYU pragma: keep
+#include "range.h"  // IWYU pragma: keep
+#include "u64str.h" // IWYU pragma: keep
 
 #include "p1.c"
 #include "parser.c"
