@@ -1,23 +1,73 @@
 #include "p1.h"
+#include "base.h"
 #include "parser.h"
 #include "range.h"
+
 #include <string.h>
 
 // UINT64_MAX = 18446744073709551615 => 20 digits + '\0'
 #define U64_STRING_SIZE 21
 
+typedef struct {
+  char buffer[U64_STRING_SIZE];
+  usize len;
+} u64str;
+
+static u64str u64_to_str(u64 value) {
+  u64str result = {0};
+
+  // Extract digits (in reverse order)
+  while (value >= 10) {
+    char digit = '0' + value % 10;
+    value /= 10;
+
+    result.buffer[result.len] = digit;
+    result.len++;
+  }
+
+  // Last digit
+  assert(value < 10);
+  result.buffer[result.len] = '0' + value;
+  result.len++;
+  result.buffer[result.len] = '\0';
+
+  assert(result.len < U64_STRING_SIZE);
+
+  // invert the number
+  for (usize i = 0; i < result.len / 2; i++) {
+    char tmp = result.buffer[i];
+    result.buffer[i] = result.buffer[result.len - 1 - i];
+    result.buffer[result.len - 1 - i] = tmp;
+  }
+
+  return result;
+}
+
+#ifdef TEST
+static void u64_to_str_test(void) {
+  u64str result = u64_to_str(101);
+  assert(strcmp(result.buffer, "101") == 0);
+
+  result = u64_to_str(123);
+  assert(strcmp(result.buffer, "123") == 0);
+
+  result = u64_to_str(1234);
+  assert(strcmp(result.buffer, "1234") == 0);
+
+  result = u64_to_str(1188511880);
+  assert(strcmp(result.buffer, "1188511880") == 0);
+}
+#endif
+
 static bool is_valid_id(u64 value) {
-  char id[U64_STRING_SIZE] = {0};
-  int id_len = snprintf(id, U64_STRING_SIZE, "%lu", value);
-  assert(id_len != -1);
-  assert((usize)id_len < U64_STRING_SIZE);
+  u64str id = u64_to_str(value);
 
-  if (id_len % 2 != 0) return true;
+  if (id.len % 2 != 0) return true;
 
-  char *first_half = id;
-  char *second_half = &id[id_len / 2];
+  char *first_half = id.buffer;
+  char *second_half = &id.buffer[id.len / 2];
 
-  bool equal = strncmp(first_half, second_half, id_len / 2) == 0;
+  bool equal = strncmp(first_half, second_half, id.len / 2) == 0;
 
   // valid if not equal
   return !equal;
@@ -63,6 +113,7 @@ static void p1_test(void) {
 }
 
 void p1_tests(void) {
+  u64_to_str_test();
   is_valid_id_test();
   p1_test();
 }
