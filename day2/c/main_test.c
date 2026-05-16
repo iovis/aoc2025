@@ -3,6 +3,7 @@
 int main(void) {
   parser_tests();
   range_tests();
+  u64str_tests();
   p1_tests();
 
   puts("ok");
