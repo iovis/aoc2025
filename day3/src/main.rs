@@ -1,10 +1,10 @@
 fn main() {
     tracing_subscriber::fmt::init();
 
-    let input = include_str!("input.txt");
+    let input = include_str!("../input.txt");
 
     println!("p1 = {:?}", p1(input));
-    println!("p2 = {:?}", p2(input));
+    // println!("p2 = {:?}", p2(input));
 }
 
 // 2 batteries
