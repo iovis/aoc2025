@@ -23,9 +23,21 @@ typedef size_t usize;
 typedef float f32;
 typedef double f64;
 
-#ifdef TEST
-#include <assert.h>
-#endif
+#define panic(fmt, ...)                                                                                                \
+  do {                                                                                                                 \
+    fprintf(stderr, "[%s:%d:%s] panic: " fmt "\n", __FILE__, __LINE__, __func__ __VA_OPT__(, ) __VA_ARGS__);           \
+    abort();                                                                                                           \
+  } while (0)
+
+#define expect(cond, ...)                                                                                              \
+  do {                                                                                                                 \
+    if (!(cond)) {                                                                                                     \
+      fprintf(stderr, "[%s:%d:%s] panic: expectation failed: %s", __FILE__, __LINE__, __func__, #cond);                \
+      __VA_OPT__(fprintf(stderr, ": "); fprintf(stderr, __VA_ARGS__);)                                                 \
+      fputc('\n', stderr);                                                                                             \
+      abort();                                                                                                         \
+    }                                                                                                                  \
+  } while (0)
 
 #ifndef NDEBUG
 #define dbg(fmt, ...)                                                                                                  \

@@ -6,8 +6,7 @@ RangeInclusive range_from(const char *str) {
   u64 end = 0;
 
   int parsed = sscanf(str, "%lu-%lu", &start, &end);
-  assert(parsed == 2);
-  (void)parsed;
+  expect(parsed == 2);
 
   return (RangeInclusive){
       .start = start,
