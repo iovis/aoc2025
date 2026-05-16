@@ -81,9 +81,40 @@ static void is_valid_id_test(void) {
 }
 #endif
 
+// faster than `is_valid_id` because it solves it
+// by calculating the number of digits
+static bool is_valid_id_fast(u64 value) {
+  u64 pow10 = 10;
+  usize digits = 1;
+
+  while (value >= pow10) {
+    pow10 *= 10;
+    digits++;
+  }
+
+  if (digits % 2 != 0) return true;
+
+  u64 half_pow10 = 1;
+  for (usize i = 0; i < digits / 2; i++) {
+    half_pow10 *= 10;
+  }
+
+  // left  = value / pow10 (123123 / 10e3)
+  // right = value % pow10 (123123 % 10e3)
+  return value / half_pow10 != value % half_pow10;
+}
+
+#ifdef TEST
+static void is_valid_id_fast_test(void) {
+  assert(is_valid_id_fast(101) == true);
+  assert(is_valid_id_fast(123123) == false);
+  assert(is_valid_id_fast(1188511880) == true);
+}
+#endif
+
 static void invalid_ids(void *ctx, u64 value) {
   u64 *total = ctx;
-  if (!is_valid_id(value)) *total += value;
+  if (!is_valid_id_fast(value)) *total += value;
 }
 
 u64 p1(const char *input) {
@@ -115,6 +146,7 @@ static void p1_test(void) {
 void p1_tests(void) {
   u64_to_str_test();
   is_valid_id_test();
+  is_valid_id_fast_test();
   p1_test();
 }
 #endif
