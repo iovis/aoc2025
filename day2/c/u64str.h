@@ -16,7 +16,3 @@ U64Str u64str_from(u64 value);
 static inline const char *u64str_cstr(const U64Str *self) {
   return &self->buffer[self->offset];
 }
-
-#ifdef TEST
-void u64str_tests(void);
-#endif

@@ -9,7 +9,3 @@ typedef struct {
 
 RangeInclusive range_from(const char *str);
 void range_print(const RangeInclusive *self);
-
-#ifdef TEST
-void range_tests(void);
-#endif
