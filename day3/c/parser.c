@@ -1,25 +1,18 @@
 #include "parser.h"
 
-static bool is_end_of_str(const char *ptr) {
-  return *ptr == '\0' || *ptr == EOF;
-}
-
 Line get_line(const char *text) {
   const char *ptr = text;
-  const char *rest = nullptr;
 
-  if (!ptr || is_end_of_str(ptr)) return (Line){.buffer = text};
+  if (!ptr || !*ptr) return (Line){.buffer = text};
 
-  while (*ptr != '\n' && *ptr != '\0' && *ptr != EOF) {
+  while (*ptr && *ptr != '\n') {
     ptr++;
   }
-
-  if (!is_end_of_str(ptr)) rest = ptr + 1;
 
   return (Line){
       .buffer = text,
       .len = (ptr - text),
-      .rest = rest,
+      .rest = (*ptr == '\n') ? ptr + 1 : nullptr,
   };
 }
 
