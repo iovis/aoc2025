@@ -2,18 +2,14 @@
 #include "parser.h"
 
 // return the index of the local maximum
-static size_t max_in(const char *line, const char *end) {
-  char max = '0';
-  size_t idx = 0;
+static size_t max_in(const char *start, const char *end) {
+  const char *max = start;
 
-  for (size_t i = 0; &line[i] < end; i++) {
-    if (line[i] > max) {
-      max = line[i];
-      idx = i;
-    }
+  for (const char *p = start; p < end; p++) {
+    if (*p > *max) max = p;
   }
 
-  return idx;
+  return (size_t)(max - start);
 }
 
 static uint64_t max_joltage(const Line *line) {
