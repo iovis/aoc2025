@@ -2,7 +2,7 @@
 
 #include "base.h"
 
-u64 p1(const char *input);
+uint64_t p1(const char *input);
 
 #ifdef TEST
 void p1_tests(void);
