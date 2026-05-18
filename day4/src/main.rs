@@ -1,5 +1,5 @@
 fn main() {
-    tracing_subscriber::fmt::init();
+    // tracing_subscriber::fmt::init();
 
     let input = include_str!("../input.txt");
 
