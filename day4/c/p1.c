@@ -1,7 +1,10 @@
 #include "p1.h"
-#include "base.h"
+
 #include "grid.h"
+
 #include <stddef.h>
+#include <stddefer.h>
+#include <stdint.h>
 
 static bool can_be_accessed(const Grid *grid, size_t i, size_t j) {
   // clang-format off
@@ -46,6 +49,8 @@ uint64_t p1(const char *input) {
 }
 
 #ifdef TEST
+#include <assert.h>
+
 void p1_tests(void) {
   const char input[] = "..@@.@@@@.\n"
                        "@@@.@.@.@@\n"

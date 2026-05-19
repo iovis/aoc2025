@@ -1,6 +1,7 @@
 #include "grid.h"
 
 #include "base.h"
+
 #include <stddef.h>
 #include <stddefer.h>
 #include <stdlib.h>
@@ -78,6 +79,7 @@ void grid_free(Grid *self) {
 }
 
 #ifdef TEST
+#include <assert.h>
 #include <string.h>
 
 static void grid_push_test(void) {

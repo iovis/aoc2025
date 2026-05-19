@@ -1,5 +1,8 @@
 #include "lib.h"
 
+#include "p1.h"
+#include "p2.h"
+
 static const char input[] = {
 #embed "../input.txt" suffix(, )
     '\0'

@@ -1,7 +1,8 @@
 #include "p2.h"
-#include "base.h"
 #include "grid.h"
+
 #include <stddef.h>
+#include <stddefer.h>
 #include <stdint.h>
 
 static bool can_be_accessed_p2(const Grid *grid, size_t i, size_t j) {
@@ -61,6 +62,8 @@ uint64_t p2(const char *input) {
 }
 
 #ifdef TEST
+#include <assert.h>
+
 void p2_tests(void) {
   const char input[] = "..@@.@@@@.\n"
                        "@@@.@.@.@@\n"

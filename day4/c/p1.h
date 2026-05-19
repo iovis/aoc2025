@@ -1,6 +1,6 @@
 #pragma once
 
-#include "base.h"
+#include <stdint.h>
 
 uint64_t p1(const char *input);
 
