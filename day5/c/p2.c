@@ -1,9 +1,9 @@
 #include "p2.h"
 
-#include "array.h"
 #include "base.h"
 #include "parser.h"
 #include "range_inclusive.h"
+#include "stb_ds.h"
 
 #include <stddefer.h>
 #include <stdint.h>
@@ -13,41 +13,42 @@ uint64_t p2(const char *input) {
   const char *line = input;
   ResultParseRangeInclusive result;
 
-  Ranges ranges = {0};
-  defer arr_free(&ranges);
+  RangeInclusive *ranges = nullptr;
+  defer arrfree(ranges);
 
   // Parse and merge ranges
   while (true) {
     result = parse_range(line);
     if (result.error) break;
-    expect(arr_push(&ranges, result.range));
+    arrput(ranges, result.range);
     line = result.rest;
   }
 
-  expect(ranges.len > 0);
+  expect(arrlen(ranges) > 0);
 
   // Sort by start
-  qsort(ranges.items, ranges.len, sizeof(ranges.items[0]), ranges_cmp);
+  qsort(ranges, arrlen(ranges), sizeof(*ranges), ranges_cmp);
 
   // Consolidate ranges using in-place compaction
-  size_t write_idx = 0;
-  for (size_t read_idx = 1; read_idx < ranges.len; read_idx++) {
-    if (ranges_can_be_merged(&ranges.items[write_idx], &ranges.items[read_idx])) {
+  int write_idx = 0;
+  for (int read_idx = 1; read_idx < arrlen(ranges); read_idx++) {
+    if (ranges_can_be_merged(&ranges[write_idx], &ranges[read_idx])) {
       // if ranges can be merged, write it in-place
-      ranges.items[write_idx] = ranges_merge(&ranges.items[write_idx], &ranges.items[read_idx]);
+      ranges[write_idx] = ranges_merge(&ranges[write_idx], &ranges[read_idx]);
     } else {
       // if they can't, copy the current range over the last discarded range
       write_idx++;
-      ranges.items[write_idx] = ranges.items[read_idx];
+      ranges[write_idx] = ranges[read_idx];
     }
   }
 
-  ranges.len = write_idx + 1; // (+1 because 0-based)
+  // Valid ranges only till `write_idx`, adjust `len` accordingly
+  arrsetlen(ranges, write_idx + 1);
 
   // Count ranges
   uint64_t total = 0;
-  for (size_t i = 0; i < ranges.len; i++) {
-    total += range_count(&ranges.items[i]);
+  for (int i = 0; i < arrlen(ranges); i++) {
+    total += range_count(&ranges[i]);
   }
 
   return total;

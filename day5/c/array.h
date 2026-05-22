@@ -53,7 +53,7 @@ typedef struct {
   size_t capacity;
 } ArrayTest;
 
-static inline void vec_tests(void) {
+static inline void array_tests(void) {
   ArrayTest array = {0};
 
   for (int i = 0; i < 20; i++) {

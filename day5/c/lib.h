@@ -1,5 +1,9 @@
 #pragma once
 
+#define STB_DS_IMPLEMENTATION
+#include "stb_ds.h"
+#undef STB_DS_IMPLEMENTATION
+
 // clang-format off
 #include "range_inclusive.c"
 #include "parser.c"

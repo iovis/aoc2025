@@ -1,16 +1,15 @@
 #include "p1.h"
 
-#include "array.h"
-#include "base.h"
 #include "parser.h"
 #include "range_inclusive.h"
+#include "stb_ds.h"
 
 #include <stddefer.h>
 #include <stdint.h>
 
-static bool is_ingredient_fresh(const Ranges *ranges, uint64_t ingredient_id) {
-  for (size_t i = 0; i < ranges->len; i++) {
-    if (range_includes(&ranges->items[i], ingredient_id)) return true;
+static bool is_ingredient_fresh(const RangeInclusive *ranges, uint64_t ingredient_id) {
+  for (int i = 0; i < arrlen(ranges); i++) {
+    if (range_includes(&ranges[i], ingredient_id)) return true;
   }
 
   return false;
@@ -21,14 +20,14 @@ uint64_t p1(const char *input) {
   ResultParseRangeInclusive result;
   uint64_t total = 0;
 
-  Ranges ranges = {0};
-  defer arr_free(&ranges);
+  RangeInclusive *ranges = nullptr;
+  defer arrfree(ranges);
 
   // Parse and store ranges
   while (true) {
     result = parse_range(line);
     if (result.error) break;
-    expect(arr_push(&ranges, result.range));
+    arrput(ranges, result.range);
     line = result.rest;
   }
 
@@ -37,7 +36,7 @@ uint64_t p1(const char *input) {
 
   while (*line) {
     uint64_t ingredient_id = parse_u64_line(&line);
-    if (is_ingredient_fresh(&ranges, ingredient_id)) total++;
+    if (is_ingredient_fresh(ranges, ingredient_id)) total++;
   }
 
   return total;

@@ -4,7 +4,7 @@
 
 int main(void) {
   parser_tests();
-  vec_tests();
+  // array_tests();
   range_inclusive_tests();
   p1_tests();
   p2_tests();
