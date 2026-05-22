@@ -3,7 +3,7 @@
 
 #include <stdlib.h>
 
-bool range_vec_push(RangeVec *self, RangeInclusive value) {
+bool ranges_push(Ranges *self, RangeInclusive value) {
   if (self->len >= self->capacity) {
     size_t new_capacity = (self->capacity == 0) ? 16 : 2 * self->capacity;
     auto new_items = realloc(self->items, new_capacity * sizeof(*self->items));
@@ -18,9 +18,16 @@ bool range_vec_push(RangeVec *self, RangeInclusive value) {
   return true;
 }
 
-void range_vec_free(RangeVec *self) {
+RangeInclusive *ranges_pop(Ranges *self) {
+  if (self->len == 0) return nullptr;
+
+  self->len--;
+  return &self->items[self->len];
+}
+
+void ranges_free(Ranges *self) {
   free(self->items);
-  *self = (RangeVec){0};
+  *self = (Ranges){0};
 }
 
 #ifdef TEST
@@ -28,16 +35,20 @@ void range_vec_free(RangeVec *self) {
 #include <stddefer.h>
 
 void vec_tests(void) {
-  RangeVec ranges = {0};
-  defer range_vec_free(&ranges);
+  Ranges ranges = {0};
+  defer ranges_free(&ranges);
 
   for (size_t i = 0; i < 20; i++) {
-    assert(range_vec_push(&ranges, range_new(i, 2 * i)));
+    assert(ranges_push(&ranges, range_new(i, 2 * i)));
   }
 
   assert(ranges.len == 20);
   assert(ranges.capacity == 32);
   assert(ranges.items[1].start == 1);
   assert(ranges.items[19].start == 19);
+
+  auto range = ranges_pop(&ranges);
+  assert(range->start == 19);
+  assert(range->end == 38);
 }
 #endif

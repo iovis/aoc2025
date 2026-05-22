@@ -7,6 +7,7 @@ int main(void) {
   vec_tests();
   range_inclusive_tests();
   p1_tests();
+  p2_tests();
 
   puts("ok");
   return 0;

@@ -8,7 +8,7 @@
 #include <stddefer.h>
 #include <stdint.h>
 
-static bool is_ingredient_fresh(const RangeVec *ranges, uint64_t ingredient_id) {
+static bool is_ingredient_fresh(const Ranges *ranges, uint64_t ingredient_id) {
   for (size_t i = 0; i < ranges->len; i++) {
     if (range_includes(&ranges->items[i], ingredient_id)) return true;
   }
@@ -21,14 +21,14 @@ uint64_t p1(const char *input) {
   ResultParseRangeInclusive result;
   uint64_t total = 0;
 
-  RangeVec ranges = {0};
-  defer range_vec_free(&ranges);
+  Ranges ranges = {0};
+  defer ranges_free(&ranges);
 
   // Parse and store ranges
   while (true) {
     result = parse_range(line);
     if (result.error) break;
-    expect(range_vec_push(&ranges, result.range));
+    expect(ranges_push(&ranges, result.range));
     line = result.rest;
   }
 
