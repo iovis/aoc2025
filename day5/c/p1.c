@@ -1,9 +1,9 @@
 #include "p1.h"
 
+#include "array.h"
 #include "base.h"
 #include "parser.h"
 #include "range_inclusive.h"
-#include "vec.h"
 
 #include <stddefer.h>
 #include <stdint.h>
@@ -22,13 +22,13 @@ uint64_t p1(const char *input) {
   uint64_t total = 0;
 
   Ranges ranges = {0};
-  defer ranges_free(&ranges);
+  defer arr_free(&ranges);
 
   // Parse and store ranges
   while (true) {
     result = parse_range(line);
     if (result.error) break;
-    expect(ranges_push(&ranges, result.range));
+    expect(arr_push(&ranges, result.range));
     line = result.rest;
   }
 

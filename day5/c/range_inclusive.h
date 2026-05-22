@@ -1,11 +1,18 @@
 #pragma once
 
+#include <stddef.h>
 #include <stdint.h>
 
 typedef struct {
   uint64_t start;
   uint64_t end;
 } RangeInclusive;
+
+typedef struct {
+  RangeInclusive *items;
+  size_t len;
+  size_t capacity;
+} Ranges;
 
 RangeInclusive range_new(const uint64_t start, const uint64_t end);
 
