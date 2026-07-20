@@ -7,6 +7,7 @@ import "core:testing"
 main :: proc() {
 	input :: #load("./input.txt", string)
 	fmt.println("p1 =", p1(input))
+	fmt.println("p2 =", p2(input))
 }
 
 p1 :: proc(input: string) -> uint {
@@ -21,6 +22,21 @@ p1 :: proc(input: string) -> uint {
 		if dial_rotate(&dial, number) == 0 {
 			total += 1
 		}
+	}
+
+	return total
+}
+
+p2 :: proc(input: string) -> int {
+	lines := input
+	dial := dial_new(50)
+	total := 0
+
+	for line in strings.split_lines_iterator(&lines) {
+		number, ok := parse(line)
+		assert(ok)
+
+		total += dial_rotate_with_count(&dial, number)
 	}
 
 	return total
@@ -41,4 +57,21 @@ p1_test :: proc(t: ^testing.T) {
 		"L82\n"
 
 	testing.expect_value(t, p1(input), 3)
+}
+
+@(test)
+p2_test :: proc(t: ^testing.T) {
+	input :=
+		"L68\n" +
+		"L30\n" +
+		"R48\n" +
+		"L5\n" +
+		"R60\n" +
+		"L55\n" +
+		"L1\n" +
+		"L99\n" +
+		"R14\n" +
+		"L82\n"
+
+	testing.expect_value(t, p2(input), 6)
 }
