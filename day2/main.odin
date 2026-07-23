@@ -1,7 +1,6 @@
 package main
 
 import "core:fmt"
-import "core:mem"
 import "core:strconv"
 import "core:strings"
 import "core:testing"
@@ -47,12 +46,65 @@ parse_range :: proc(range: string) -> Range {
 
 is_valid_id :: proc(id: uint) -> bool {
 	buf: [64]byte
-	id_str := strconv.write_uint(buf[:], u64(id), 10)
+	id_str := fast_uint_to_string(buf[:], id)
 
 	if len(id_str) % 2 != 0 do return true
 
 	mid := len(id_str) / 2
 	return id_str[:mid] != id_str[mid:]
+}
+
+decimal_pairs ::
+	"0001020304050607080910111213141516171819" +
+	"2021222324252627282930313233343536373839" +
+	"4041424344454647484950515253545556575859" +
+	"6061626364656667686970717273747576777879" +
+	"8081828384858687888990919293949596979899"
+
+/// Use a lookup table to write pairs of characters
+// taking 4 characters at a time
+fast_uint_to_string :: proc(buf: []byte, number: uint) -> string {
+	number := number
+	i := len(buf)
+
+	for number > 9999 {
+		chunk := number % 10000
+		number /= 10000
+
+		i -= 4
+		write_pair(&buf[i], chunk / 100) // first 2
+		write_pair(&buf[i + 2], chunk % 100) // last 2
+	}
+
+	// final cleanup
+	switch {
+	case number > 999:
+		i -= 4
+		write_pair(&buf[i], number / 100) // first 2
+		write_pair(&buf[i + 2], number % 100) // last 2
+	case number > 99:
+		i -= 3
+		buf[i] = u8('0' + number / 100) // first number
+		write_pair(&buf[i + 1], number % 100) // last 2
+	case number > 9:
+		i -= 2
+		write_pair(&buf[i], number)
+	case:
+		i -= 1
+		buf[i] = u8('0' + number)
+	}
+
+	return string(buf[i:])
+}
+
+write_pair :: proc(ptr: [^]byte, number: uint) {
+	assert(number < 100)
+
+	pairs := decimal_pairs
+	i := number * 2
+
+	ptr[0] = pairs[i]
+	ptr[1] = pairs[i + 1]
 }
 
 @(test)
@@ -71,4 +123,16 @@ p1_test :: proc(t: ^testing.T) {
 		"2121212118-2121212124\n"
 
 	testing.expect_value(t, p1(input), 1227775554)
+}
+
+@(test)
+fast_uint_to_string_test :: proc(t: ^testing.T) {
+	buf: [64]byte
+	testing.expect_value(t, fast_uint_to_string(buf[:], 0), "0")
+	testing.expect_value(t, fast_uint_to_string(buf[:], 9), "9")
+	testing.expect_value(t, fast_uint_to_string(buf[:], 10), "10")
+	testing.expect_value(t, fast_uint_to_string(buf[:], 101), "101")
+	testing.expect_value(t, fast_uint_to_string(buf[:], 1234), "1234")
+	testing.expect_value(t, fast_uint_to_string(buf[:], 1188511880), "1188511880")
+	testing.expect_value(t, fast_uint_to_string(buf[:], 184467440737095), "184467440737095")
 }
