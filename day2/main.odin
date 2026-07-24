@@ -45,13 +45,19 @@ parse_range :: proc(range: string) -> Range {
 }
 
 is_valid_id :: proc(id: uint) -> bool {
-	buf: [64]byte
-	id_str := fast_uint_to_string(buf[:], id)
+	buf: [20]byte = --- // uninitialized memory
+	id_str := fast_uint_to_string(&buf, id)
 
 	if len(id_str) % 2 != 0 do return true
 
 	mid := len(id_str) / 2
-	return id_str[:mid] != id_str[mid:]
+
+	// return id_str[:mid] != id_str[mid:]
+	for i in 0 ..< mid {
+		if id_str[i] != id_str[mid + i] do return true
+	}
+
+	return false
 }
 
 decimal_pairs ::
@@ -63,7 +69,7 @@ decimal_pairs ::
 
 /// Use a lookup table to write pairs of characters
 // taking 4 characters at a time
-fast_uint_to_string :: proc(buf: []byte, number: uint) -> string {
+fast_uint_to_string :: proc(buf: ^[20]byte, number: uint) -> string {
 	number := number
 	i := len(buf)
 
@@ -127,12 +133,12 @@ p1_test :: proc(t: ^testing.T) {
 
 @(test)
 fast_uint_to_string_test :: proc(t: ^testing.T) {
-	buf: [64]byte
-	testing.expect_value(t, fast_uint_to_string(buf[:], 0), "0")
-	testing.expect_value(t, fast_uint_to_string(buf[:], 9), "9")
-	testing.expect_value(t, fast_uint_to_string(buf[:], 10), "10")
-	testing.expect_value(t, fast_uint_to_string(buf[:], 101), "101")
-	testing.expect_value(t, fast_uint_to_string(buf[:], 1234), "1234")
-	testing.expect_value(t, fast_uint_to_string(buf[:], 1188511880), "1188511880")
-	testing.expect_value(t, fast_uint_to_string(buf[:], 184467440737095), "184467440737095")
+	buf: [20]byte
+	testing.expect_value(t, fast_uint_to_string(&buf, 0), "0")
+	testing.expect_value(t, fast_uint_to_string(&buf, 9), "9")
+	testing.expect_value(t, fast_uint_to_string(&buf, 10), "10")
+	testing.expect_value(t, fast_uint_to_string(&buf, 101), "101")
+	testing.expect_value(t, fast_uint_to_string(&buf, 1234), "1234")
+	testing.expect_value(t, fast_uint_to_string(&buf, 1188511880), "1188511880")
+	testing.expect_value(t, fast_uint_to_string(&buf, 184467440737095), "184467440737095")
 }
