@@ -8,6 +8,7 @@ import "core:testing"
 main :: proc() {
 	input :: #load("./input.txt", string)
 	fmt.println("p1 =", p1(input))
+	fmt.println("p2 =", p2(input))
 }
 
 Range :: struct {
@@ -24,6 +25,23 @@ p1 :: proc(input: string) -> uint {
 
 		for id in range.start ..= range.end {
 			if !is_valid_id(id) {
+				total += id
+			}
+		}
+	}
+
+	return total
+}
+
+p2 :: proc(input: string) -> uint {
+	total: uint = 0
+	ranges := strings.trim_right(input, "\n")
+
+	for range_str in strings.split_iterator(&ranges, ",") {
+		range := parse_range(range_str)
+
+		for id in range.start ..= range.end {
+			if !p2_is_valid_id(id) {
 				total += id
 			}
 		}
@@ -58,6 +76,30 @@ is_valid_id :: proc(id: uint) -> bool {
 	}
 
 	return false
+}
+
+p2_is_valid_id :: proc(id: uint) -> bool {
+	buf: [20]byte = --- // uninitialized memory
+	id_str := fast_uint_to_string(&buf, id)
+
+	for win_size := len(id_str) / 2; win_size > 0; win_size -= 1 {
+		if len(id_str) % win_size != 0 do continue
+
+		windows := len(id_str) / win_size
+		invalid := true
+
+		for i in 1 ..< windows {
+			start := i * win_size
+			if id_str[0:win_size] != id_str[start:start + win_size] {
+				invalid = false
+				break
+			}
+		}
+
+		if invalid do return false
+	}
+
+	return true
 }
 
 decimal_pairs ::
@@ -141,4 +183,15 @@ fast_uint_to_string_test :: proc(t: ^testing.T) {
 	testing.expect_value(t, fast_uint_to_string(&buf, 1234), "1234")
 	testing.expect_value(t, fast_uint_to_string(&buf, 1188511880), "1188511880")
 	testing.expect_value(t, fast_uint_to_string(&buf, 184467440737095), "184467440737095")
+}
+
+@(test)
+p2_test :: proc(t: ^testing.T) {
+	input :=
+		"11-22,95-115,998-1012,1188511880-1188511890," +
+		"222220-222224,1698522-1698528,446443-446449," +
+		"38593856-38593862,565653-565659,824824821-824824827," +
+		"2121212118-2121212124\n"
+
+	testing.expect_value(t, p2(input), 4174379265)
 }
